@@ -1,0 +1,124 @@
+// See docs for language spec: https://www.fcb1010.eu/downloads/UnO2_Usermanual.pdf
+
+// PRESETS are mutually exclusive -- only one preset can be active at a time.
+PRESETS =
+{
+}
+
+// EFFECTS can be toggled on or off. Any number of effects can be on at once.
+EFFECTS =
+{
+   Overdrive
+   Distortion
+   Compressor
+   Chorus
+   Delay
+   Reverb
+   RingMod
+   
+   //Organ stuff
+   PercussionToggle
+   PercussionVolume
+   PercussionHarmonic
+   PercussionDecay
+   VibratoChorusLowerToggle
+   VibratoChorusUpperToggle
+   RotaryToggle
+   RotarySpeed
+   WahToggle
+}
+
+// TRIGGERS are only on while the switch is held. MIDI command(s) are sent when the
+// switch is turned on, and optionally again when released. The optional release
+// commands make "momentary effects" possible.
+TRIGGERS =
+{
+   // Momentary effects
+   Sustain
+   Killswitch
+   
+   // Buttons
+   // LoopRec, LoopPlay, LoopNext, etc.?
+}
+
+// SWEEPS are expression pedal behaviors.
+SWEEPS =
+{
+   Volume
+   Wah
+   Swell
+   PitchDown
+   PitchUp
+}
+
+// BANKS are groups of PRESETS, EFFECTS, and TRIGGERS
+BANKS =
+{
+   Organ : Reverb | Delay | Distortion | Overdrive | WahToggle | RingMod | PercussionVolume | PercussionDecay | PercussionHarmonic | VibratoChorusLowerToggle
+}
+
+
+// Channel definitions
+CHANNEL MainChannel = 1
+
+// Initialization behaviors
+INIT_FCB =
+{
+	Pedal 1 = Wah
+}
+INIT_BANK Organ =
+{
+  	Pedal 2 = Swell
+}
+
+
+// Effects / stompboxes & Triggers
+EFFECT_ON Reverb = SendMidi MainChannel CtrlChange 80 127
+EFFECT_OFF Reverb = SendMidi MainChannel CtrlChange 80 0
+
+EFFECT_ON Delay = SendMidi MainChannel CtrlChange 81 127
+EFFECT_OFF Delay = SendMidi MainChannel CtrlChange 81 0
+
+EFFECT_ON Distortion = SendMidi MainChannel CtrlChange 82 127
+EFFECT_OFF Distortion = SendMidi MainChannel CtrlChange 82 0
+
+EFFECT_ON Overdrive = SendMidi MainChannel CtrlChange 83 127
+EFFECT_OFF Overdrive = SendMidi MainChannel CtrlChange 83 0
+
+TRIGGER_CLICK Killswitch = SendMidi MainChannel CtrlChange 84 127
+TRIGGER_RELEASE Killswitch = SendMidi MainChannel CtrlChange 84 0
+
+EFFECT_ON RingMod = SendMidi MainChannel CtrlChange 85 127
+EFFECT_OFF RingMod = SendMidi MainChannel CtrlChange 85 0
+
+EFFECT_ON WahToggle = SendMidi MainChannel CtrlChange 86 127
+EFFECT_OFF WahToggle = SendMidi MainChannel CtrlChange 86 0
+
+
+// Organ toggles
+EFFECT_ON PercussionToggle = SendMidi MainChannel CtrlChange 102 127
+EFFECT_OFF PercussionToggle = SendMidi MainChannel CtrlChange 102 0
+
+EFFECT_ON PercussionVolume = SendMidi MainChannel CtrlChange 103 127
+EFFECT_OFF PercussionVolume = SendMidi MainChannel CtrlChange 103 0
+
+EFFECT_ON PercussionDecay = SendMidi MainChannel CtrlChange 104 127
+EFFECT_OFF PercussionDecay = SendMidi MainChannel CtrlChange 104 0
+
+EFFECT_ON PercussionHarmonic = SendMidi MainChannel CtrlChange 105 127
+EFFECT_OFF PercussionHarmonic = SendMidi MainChannel CtrlChange 105 0
+
+EFFECT_ON VibratoChorusUpperToggle = SendMidi MainChannel CtrlChange 106 127
+EFFECT_OFF VibratoChorusUpperToggle = SendMidi MainChannel CtrlChange 106 0
+
+EFFECT_ON VibratoChorusLowerToggle = SendMidi MainChannel CtrlChange 107 127
+EFFECT_OFF VibratoChorusLowerToggle = SendMidi MainChannel CtrlChange 107 0
+
+
+// Sweeps
+SWEEP Volume = SendMidi MainChannel CtrlChange 7 0-127
+SWEEP Wah = SendMidi MainChannel CtrlChange 4 0-127
+SWEEP Swell = SendMidi MainChannel CtrlChange 11 0-127 FastRising
+// Do these work?
+SWEEP PitchDown = SendMidi MainChannel PitchBend 127-0
+SWEEP PitchUp = SendMidi MainChannel PitchBend 0-127
