@@ -1,4 +1,14 @@
-// See docs for language spec: https://www.fcb1010.eu/downloads/UnO2_Usermanual.pdf
+//////////////////////////////////////////////////////////////////////////////////////
+// See docs for language spec: https://www.fcb1010.eu/downloads/UnO2_Usermanual.pdf //
+//////////////////////////////////////////////////////////////////////////////////////
+//
+// This program uses the following MIDI CC ranges (not necessarily all CCs in each range):
+//   4: Wah pedal
+//   7: Volume pedal
+//   11: Expression pedal
+//   52-63: Loop control
+//   80-90: Effects
+//   102-107: Organ controls
 
 // PRESETS are mutually exclusive -- only one preset can be active at a time.
 PRESETS =
@@ -37,8 +47,14 @@ TRIGGERS =
    Sustain
    Killswitch
    
-   // Buttons
-   // LoopRec, LoopPlay, LoopNext, etc.?
+   // Loop control; Note that while some of these look like effects toggles, they are
+   // track-specifc, so it would make no sense to have "EFFECTS" behavior for these.
+   LoopNextTrack
+   LoopPreviousTrack
+   LoopClearTrack
+   LoopPlayPauseTrackToggle
+   LoopRecordTrackToggle
+   LoopUndo
 }
 
 // SWEEPS are expression pedal behaviors.
@@ -51,15 +67,24 @@ SWEEPS =
    PitchUp
 }
 
+// GLOBALSWITCHes are convenience feature in the editor only
+GLOBALSWITCH 1 = Reverb
+GLOBALSWITCH 2 = Delay
+GLOBALSWITCH 3 = Distortion
+GLOBALSWITCH 4 = Overdrive
+GLOBALSWITCH 5 = RingMod
+
 // BANKS are groups of PRESETS, EFFECTS, and TRIGGERS
 BANKS =
 {
-   Organ : Reverb | Delay | Distortion | Overdrive | WahToggle | RingMod | PercussionVolume | PercussionDecay | PercussionHarmonic | VibratoChorusLowerToggle
+   Organ        : Reverb | Delay | Distortion | Overdrive | RingMod | WahToggle             | PercussionVolume | PercussionDecay   | PercussionHarmonic | VibratoChorusLowerToggle
+   Loop Control : Reverb | Delay | Distortion | Overdrive | RingMod | LoopRecordTrackToggle | LoopUndo         | LoopPreviousTrack | LoopNextTrack      | LoopPlayPauseTrackToggle                        
 }
 
 
 // Channel definitions
 CHANNEL MainChannel = 1
+CHANNEL LoopChannel = 2
 
 // Initialization behaviors
 INIT_FCB =
@@ -114,11 +139,18 @@ EFFECT_OFF VibratoChorusUpperToggle = SendMidi MainChannel CtrlChange 106 0
 EFFECT_ON VibratoChorusLowerToggle = SendMidi MainChannel CtrlChange 107 127
 EFFECT_OFF VibratoChorusLowerToggle = SendMidi MainChannel CtrlChange 107 0
 
+// Loop controls
+TRIGGER_CLICK LoopNextTrack = SendMidi LoopChannel CtrlChange 52 127
+TRIGGER_CLICK LoopPreviousTrack = SendMidi LoopChannel CtrlChange 53 127
+TRIGGER_CLICK LoopClearTrack = SendMidi LoopChannel CtrlChange 54 127
+TRIGGER_CLICK LoopPlayPauseTrackToggle = SendMidi LoopChannel CtrlChange 55 127
+TRIGGER_CLICK LoopRecordTrackToggle = SendMidi LoopChannel CtrlChange 56 127
+TRIGGER_CLICK LoopUndo = SendMidi LoopChannel CtrlChange 57 127
 
 // Sweeps
 SWEEP Volume = SendMidi MainChannel CtrlChange 7 0-127
 SWEEP Wah = SendMidi MainChannel CtrlChange 4 0-127
 SWEEP Swell = SendMidi MainChannel CtrlChange 11 0-127 FastRising
-// Do these work?
+// TODO: Do these work?
 SWEEP PitchDown = SendMidi MainChannel PitchBend 127-0
 SWEEP PitchUp = SendMidi MainChannel PitchBend 0-127
