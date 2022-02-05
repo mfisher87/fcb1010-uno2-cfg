@@ -77,8 +77,8 @@ GLOBALSWITCH 5 = RingMod
 // BANKS are groups of PRESETS, EFFECTS, and TRIGGERS
 BANKS =
 {
+   Loop Control : Reverb | Delay | Distortion | Overdrive | RingMod | LoopRecordTrackToggle | LoopUndo         | LoopPreviousTrack | LoopNextTrack      | LoopPlayPauseTrackToggle
    Organ        : Reverb | Delay | Distortion | Overdrive | RingMod | WahToggle             | PercussionVolume | PercussionDecay   | PercussionHarmonic | VibratoChorusLowerToggle
-   Loop Control : Reverb | Delay | Distortion | Overdrive | RingMod | LoopRecordTrackToggle | LoopUndo         | LoopPreviousTrack | LoopNextTrack      | LoopPlayPauseTrackToggle                        
 }
 
 
